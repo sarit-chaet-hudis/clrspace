@@ -3,6 +3,7 @@ import { WORLD_WIDTH, WORLD_HEIGHT, scribbleSpots, consumptionSpots, SPOT_SIZE }
 import { createScribbleOverlay } from './scribbleOverlay.js';
 import { setupColorTemperatureToggle, setupAmbientSound } from './ui.js';
 import { createParallaxBackground } from './background.js';
+import { createBubbleBurster } from './mechanics/bubbleBurster.js';
 
 const container = document.getElementById('clrspace-container');
 
@@ -48,12 +49,20 @@ class WorldScene extends Phaser.Scene {
   }
 
   drawConsumptionSpots() {
+    this.mechanics = [];
     for (const spot of consumptionSpots) {
       const g = this.add.graphics();
       g.fillStyle(0x3a2a5a, 0.7);
       g.fillRoundedRect(spot.x - SPOT_SIZE / 2, spot.y - SPOT_SIZE / 2, SPOT_SIZE, SPOT_SIZE, 12);
       g.lineStyle(3, 0xb388ff, 1);
       g.strokeRoundedRect(spot.x - SPOT_SIZE / 2, spot.y - SPOT_SIZE / 2, SPOT_SIZE, SPOT_SIZE, 12);
+
+      // Ticket 04's bubble-burster prototype lives in the first Consumption
+      // Spot; 05/06 stay placeholders until their own tickets resolve.
+      if (spot.id === 'consumption-1') {
+        this.mechanics.push(createBubbleBurster(this, spot, SPOT_SIZE));
+        continue;
+      }
 
       const text = this.add.text(spot.x, spot.y, spot.label, {
         fontFamily: 'monospace',
@@ -94,6 +103,7 @@ class WorldScene extends Phaser.Scene {
     this.cameras.main.scrollY += this.velocity.y;
 
     this.scribbleOverlay.update(this.cameras.main);
+    for (const mechanic of this.mechanics) mechanic.update();
   }
 }
 
