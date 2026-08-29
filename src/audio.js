@@ -38,6 +38,42 @@ export function playPop() {
   osc.stop(now + 0.12);
 }
 
+// A single short blip — a gentle "match" acknowledgment, quieter than playClear.
+export function playMatch() {
+  if (muted) return;
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(440, now);
+  osc.frequency.exponentialRampToValueAtTime(660, now + 0.08);
+  gain.gain.setValueAtTime(0.15, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.16);
+}
+
+// A soft descending blip — a non-punishing "no match, try again" cue.
+export function playMismatch() {
+  if (muted) return;
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(300, now);
+  osc.frequency.exponentialRampToValueAtTime(180, now + 0.12);
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.16);
+}
+
 // A short rising two-note chime — positive reinforcement for clearing a Consumption Mechanic.
 export function playClear() {
   if (muted) return;

@@ -4,6 +4,7 @@ import { createScribbleOverlay } from './scribbleOverlay.js';
 import { setupColorTemperatureToggle, setupAmbientSound } from './ui.js';
 import { createParallaxBackground } from './background.js';
 import { createBubbleBurster } from './mechanics/bubbleBurster.js';
+import { createMemoryMatch } from './mechanics/memoryMatch.js';
 
 const container = document.getElementById('clrspace-container');
 
@@ -57,10 +58,15 @@ class WorldScene extends Phaser.Scene {
       g.lineStyle(3, 0xb388ff, 1);
       g.strokeRoundedRect(spot.x - SPOT_SIZE / 2, spot.y - SPOT_SIZE / 2, SPOT_SIZE, SPOT_SIZE, 12);
 
-      // Ticket 04's bubble-burster prototype lives in the first Consumption
-      // Spot; 05/06 stay placeholders until their own tickets resolve.
+      // Ticket 04's bubble-burster and ticket 05's memory-match prototypes
+      // live in the first two Consumption Spots; 06 stays a placeholder
+      // until its own ticket resolves.
       if (spot.id === 'consumption-1') {
         this.mechanics.push(createBubbleBurster(this, spot, SPOT_SIZE));
+        continue;
+      }
+      if (spot.id === 'consumption-2') {
+        this.mechanics.push(createMemoryMatch(this, spot));
         continue;
       }
 
