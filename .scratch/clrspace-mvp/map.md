@@ -29,6 +29,7 @@ A built, feelable MVP-sized first slice of clrspace — small enough to start bu
 - [What web tech fits an MVP...](.scratch/clrspace-mvp/issues/01-research-tech-stack.md): researched Canvas 2D API + DOM overlay as the fit (superseded by ticket 02)
 - [Which rendering approach + libraries should clrspace's MVP actually use?](.scratch/clrspace-mvp/issues/02-pick-tech-stack.md): **Phaser**, overriding the research recommendation — clrspace's better long-term model is a "game scape" (physics/sprites/collisions), one continuous World scene with camera travel between Spots. See ADR-0001.
 - [What's the exact hand-placed layout of the Space for MVP?](.scratch/clrspace-mvp/issues/03-spot-layout.md): 5 Scribble Spots + 3 Consumption Spots, loose scatter, hard edges, Scribble Spot style randomized once per Spot from a curated set (exact fonts TBD), camera eases/tweens between Spots.
+- [Does a real DOM input coexist cleanly overlaid on a Phaser scene?](.scratch/clrspace-mvp/issues/09-spike-phaser-dom-text.md): Yes, verified live — coordinate tracking is clean; two fixable gotchas found (Phaser's default key capture eats keystrokes like Space unless disabled while a Scribble Spot is focused; clicking the canvas doesn't auto-blur a focused input, needs an explicit blur call). Neither reopens ADR-0001.
 
 ## Not yet specified
 
