@@ -11,7 +11,7 @@ import { playPop, playClear } from '../audio.js';
 // TUNABLES — fine-tune later, not decided now:
 const BUBBLE_COUNT = 6;
 const BUBBLE_RADIUS_RANGE = [10, 20];
-const DRIFT_SPEED = 0.9;
+const DRIFT_SPEED = 0.5;
 const PARTIAL_RESPAWN_DELAY_RANGE = [400, 1200]; // one bubble popped, others remain
 const FULL_CLEAR_RESPAWN_DELAY = 7000; // all bubbles popped — the "win" pause
 // Not yet decided (fog, not this ticket): overall Spot/game size, bubble
