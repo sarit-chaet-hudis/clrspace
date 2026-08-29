@@ -7,6 +7,12 @@ What should the first Consumption Spot's Mechanic be, concretely? Build a cheap,
 
 ## Progress
 
-Built bubble-burster in `consumption-1`'s Spot: a handful of colored bubbles drift within its bounds, popping (scale+fade) on click and respawning after a short delay. Verified working via Playwright (click → pop → respawn cycle confirmed across multiple bubbles). Code: `src/mechanics/bubbleBurster.js`.
+Built bubble-burster in `consumption-1`'s Spot: colored bubbles drift within its bounds, popping (scale+fade) on click. Verdict so far: **"overall good"**, with a feedback round already applied:
+- Bubble hue now matches the color-temperature toggle (warm/cool/neutral bands), not just the passive CSS filter
+- Popping one bubble respawns it quickly; popping *all* of them triggers a "nice!" celebration + chime, then a 7s pause before a fresh batch arrives together
+- Synthesized pop/clear sounds (Web Audio, `src/audio.js`), sharing state with Ambient Sound's mute toggle
+- Faster drift (0.3 → 0.9)
 
-**Not yet resolved** — this is a "how should it feel" question (prototype ticket, HITL), so it needs your actual reaction, not just automated verification that it runs. Try it (run `npm run dev`, pan to the first purple Consumption Spot) and tell me if bubble-burster is the one to keep here, or if it should change.
+Tunable knobs deliberately left open for later (see `TUNABLES` comment block in `src/mechanics/bubbleBurster.js`): overall Spot/game size, bubble count, what "success" means beyond a full clear, easter eggs.
+
+**Not yet resolved** — still a "how should it feel" question (prototype ticket, HITL). Try the latest build and confirm whether this is ready to lock in as `consumption-1`'s Mechanic.
