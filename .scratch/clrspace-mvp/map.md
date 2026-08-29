@@ -28,11 +28,12 @@ A built, feelable MVP-sized first slice of clrspace — small enough to start bu
 
 - [What web tech fits an MVP...](.scratch/clrspace-mvp/issues/01-research-tech-stack.md): researched Canvas 2D API + DOM overlay as the fit (superseded by ticket 02)
 - [Which rendering approach + libraries should clrspace's MVP actually use?](.scratch/clrspace-mvp/issues/02-pick-tech-stack.md): **Phaser**, overriding the research recommendation — clrspace's better long-term model is a "game scape" (physics/sprites/collisions), one continuous World scene with camera travel between Spots. See ADR-0001.
+- [What's the exact hand-placed layout of the Space for MVP?](.scratch/clrspace-mvp/issues/03-spot-layout.md): 5 Scribble Spots + 3 Consumption Spots, loose scatter, hard edges, Scribble Spot style randomized once per Spot from a curated set (exact fonts TBD), camera eases/tweens between Spots.
 
 ## Not yet specified
 
 - Anything downstream of the Phaser choice not yet pinned (build tooling/bundler, deployment target, file/module layout) — will follow naturally once `build-mvp-base` starts.
-- Fine visual grammar for Scribble Spot variety (which fonts/frames, how many is "several") — expected to graduate out of `spot-layout` once that ticket resolves.
+- Exact font/size/frame assets for the Scribble Spot style palette — deferred to `build-mvp-base`, a hands-on asset choice rather than an abstract one.
 - Which Consumption Mechanics end up using physics/collision vs. simpler input handling — graduates per-Mechanic as tickets 04/05/06 resolve.
 
 ## Out of scope
