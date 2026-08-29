@@ -1,23 +1,27 @@
 import Phaser from 'phaser';
 import { getColorTemp } from '../colorTempState.js';
-import { playMatch, playMismatch, playClear } from '../audio.js';
+import { playMatch, playMismatch, playSwap, playClear } from '../audio.js';
 
 // Consumption Mechanic prototype (ticket 05): memory-match.
 // Deliberately different in kind from bubble-burster (04) — turn-based
 // matching against a hidden pattern, not real-time physical popping.
-// 3 pairs of hidden tiles; reveal two, keep them if they match, flip them
-// back if not. Clearing all 3 pairs celebrates and reshuffles a fresh set.
+// 8 pairs of hidden tiles; reveal two, keep them if they match, flip them
+// back if not. Once half the pairs are cleared, two remaining hidden tiles
+// visibly swap places once, to break rote memorization. Clearing the board
+// celebrates and reshuffles a fresh set.
 
 // TUNABLES — fine-tune later, not decided now:
-const COLS = 3;
-const ROWS = 2;
-const TILE_SIZE = 34;
-const GAP = 8;
+const COLS = 4;
+const ROWS = 4; // 4x4 minimum — 3x2 played too easy
+const TILE_SIZE = 28;
+const GAP = 4;
 const MISMATCH_FLIP_BACK_DELAY = 700;
 const MATCH_CLEAR_DELAY = 350;
 const FULL_CLEAR_RESHUFFLE_DELAY = 4000;
-// Not yet decided (fog, not this ticket): grid size (more pairs = harder),
-// a timer/streak scoring, what "success" means beyond a full clear, easter eggs.
+const SWAP_TWEEN_DURATION = 450;
+// Not yet decided (fog, not this ticket): grid size beyond this 4x4 floor,
+// a timer/streak scoring, what "success" means beyond a full clear, easter
+// eggs, whether more than one swap should happen on larger boards.
 
 const HUE_RANGES = {
   neutral: () => Math.random(),
@@ -49,6 +53,7 @@ export function createMemoryMatch(scene, spot) {
   let selected = [];
   let inputLocked = false;
   let matchedCount = 0;
+  let halfSwapTriggered = false;
 
   function buildBoard() {
     const pairCount = (COLS * ROWS) / 2;
@@ -71,6 +76,7 @@ export function createMemoryMatch(scene, spot) {
     });
 
     matchedCount = 0;
+    halfSwapTriggered = false;
     selected = [];
     inputLocked = false;
   }
@@ -105,6 +111,9 @@ export function createMemoryMatch(scene, spot) {
         matchedCount++;
         if (matchedCount === tiles.length / 2) {
           celebrateClear();
+        } else if (!halfSwapTriggered && matchedCount === Math.floor(tiles.length / 4)) {
+          halfSwapTriggered = true;
+          triggerSwap();
         }
       });
     } else {
@@ -116,6 +125,26 @@ export function createMemoryMatch(scene, spot) {
         inputLocked = false;
       });
     }
+  }
+
+  function triggerSwap() {
+    const candidates = tiles.filter((t) => !t.matched && !t.revealed);
+    if (candidates.length < 2) return;
+    const i = Math.floor(Math.random() * candidates.length);
+    let j = Math.floor(Math.random() * candidates.length);
+    while (j === i) j = Math.floor(Math.random() * candidates.length);
+    const tileA = candidates[i];
+    const tileB = candidates[j];
+
+    playSwap();
+    const ax = tileA.rect.x;
+    const ay = tileA.rect.y;
+    const bx = tileB.rect.x;
+    const by = tileB.rect.y;
+    // Values/colors stay attached to their own rect, so physically swapping
+    // screen position also swaps which pair-value lives at each grid slot.
+    scene.tweens.add({ targets: tileA.rect, x: bx, y: by, duration: SWAP_TWEEN_DURATION, ease: 'Cubic.easeInOut' });
+    scene.tweens.add({ targets: tileB.rect, x: ax, y: ay, duration: SWAP_TWEEN_DURATION, ease: 'Cubic.easeInOut' });
   }
 
   function celebrateClear() {
