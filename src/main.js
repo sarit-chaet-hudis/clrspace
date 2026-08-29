@@ -14,13 +14,20 @@ class WorldScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.centerOn(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
-    this.cameras.main.roundPixels = true;
 
     this.drawBackground();
     this.drawConsumptionSpots();
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.velocity = { x: 0, y: 0 };
+    this.wheelInput = { x: 0, y: 0 };
+
+    // Mouse-wheel / trackpad gesture panning, feeding the same eased velocity
+    // as the arrow keys — no separate physics system.
+    this.input.on('wheel', (_pointer, _objects, deltaX, deltaY) => {
+      this.wheelInput.x = Phaser.Math.Clamp(deltaX, -MAX_SPEED * 6, MAX_SPEED * 6) / 6;
+      this.wheelInput.y = Phaser.Math.Clamp(deltaY, -MAX_SPEED * 6, MAX_SPEED * 6) / 6;
+    });
 
     this.scribbleOverlay = createScribbleOverlay({
       container,
@@ -67,6 +74,16 @@ class WorldScene extends Phaser.Scene {
     if (this.cursors.right.isDown) target.x = MAX_SPEED;
     if (this.cursors.up.isDown) target.y = -MAX_SPEED;
     if (this.cursors.down.isDown) target.y = MAX_SPEED;
+
+    // A wheel/trackpad gesture nudges the target for one frame; with no new
+    // event next frame it decays back to 0 through the same easing below —
+    // a held two-finger swipe keeps re-nudging it, so it reads as continuous.
+    if (this.wheelInput.x !== 0 || this.wheelInput.y !== 0) {
+      target.x = this.wheelInput.x;
+      target.y = this.wheelInput.y;
+      this.wheelInput.x = 0;
+      this.wheelInput.y = 0;
+    }
 
     this.velocity.x += (target.x - this.velocity.x) * ACCEL;
     this.velocity.y += (target.y - this.velocity.y) * ACCEL;
