@@ -15,21 +15,25 @@ A built, feelable MVP-sized first slice of clrspace — small enough to start bu
 - One Toggle: color temperature (heat/coolness of the Space's colors)
 - Ambient Sound: one looping background track + mute/unmute control, defaulting to muted
 - No persistence across Sessions is *assumed* for MVP, but this is explicitly re-opened as a ticket below — you asked to decide it from lived experience, not upfront
+- Rendering/engine: **Phaser**, as one continuous World scene with camera-based travel between Spots — see `docs/adr/0001-phaser-for-rendering.md`. clrspace is now understood as a "game scape": physics (including travel/animation between Spots), sprites, and collisions in Consumption Mechanics are all in scope going forward, not just MVP-minimal rendering.
 
 ## Notes
 
 - Domain vocabulary: `CONTEXT.md` (Space, Spot, Scribble Spot, Consumption Spot, Mechanic, Toggle, Ambient Sound, Session)
+- Architecture decisions: `docs/adr/` (currently: `0001-phaser-for-rendering.md`)
 - **Exception to "plan, don't do":** the `build-mvp-base` ticket carries real execution (building the base Space), because the persistence ticket can't be judged until it's been lived with. Every other ticket stays planning-only.
 - When resolving a `grilling`-type ticket below, call the Skill tool for `grilling` (and `domain-modeling` if new vocabulary shows up).
 
 ## Decisions so far
 
-- [What web tech fits an MVP...](.scratch/clrspace-mvp/issues/01-research-tech-stack.md): Canvas 2D API + DOM overlay for pixel-perfect rendering with selectable text Spots
+- [What web tech fits an MVP...](.scratch/clrspace-mvp/issues/01-research-tech-stack.md): researched Canvas 2D API + DOM overlay as the fit (superseded by ticket 02)
+- [Which rendering approach + libraries should clrspace's MVP actually use?](.scratch/clrspace-mvp/issues/02-pick-tech-stack.md): **Phaser**, overriding the research recommendation — clrspace's better long-term model is a "game scape" (physics/sprites/collisions), one continuous World scene with camera travel between Spots. See ADR-0001.
 
 ## Not yet specified
 
-- Anything downstream of tech-stack choice (build tooling, deployment target, file/module layout) — will follow naturally once `pick-tech-stack` resolves.
+- Anything downstream of the Phaser choice not yet pinned (build tooling/bundler, deployment target, file/module layout) — will follow naturally once `build-mvp-base` starts.
 - Fine visual grammar for Scribble Spot variety (which fonts/frames, how many is "several") — expected to graduate out of `spot-layout` once that ticket resolves.
+- Which Consumption Mechanics end up using physics/collision vs. simpler input handling — graduates per-Mechanic as tickets 04/05/06 resolve.
 
 ## Out of scope
 
