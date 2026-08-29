@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PROTOTYPE — phaser-dom-text spike (throwaway, ticket 09)</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #111; overflow: hidden; font-family: monospace; }
+    #game-container { position: relative; width: 800px; height: 600px; }
+    #scribble-input {
+      position: absolute;
+      width: 160px;
+      height: 60px;
+      font-family: monospace;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid #ff6b6b;
+      resize: none;
+      z-index: 10;
+    }
+    #status {
+      position: absolute;
+      top: 610px;
+      left: 0;
+      width: 800px;
+      color: #0f0;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <textarea id="scribble-input" placeholder="type here (Scribble Spot stand-in)"></textarea>
+  </div>
+  <div id="status">loading...</div>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
