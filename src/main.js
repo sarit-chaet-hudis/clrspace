@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { WORLD_WIDTH, WORLD_HEIGHT, scribbleSpots, consumptionSpots, SPOT_SIZE } from './spots.js';
 import { createScribbleOverlay } from './scribbleOverlay.js';
 import { setupColorTemperatureToggle, setupAmbientSound } from './ui.js';
+import { createParallaxBackground } from './background.js';
 
 const container = document.getElementById('clrspace-container');
 
@@ -15,6 +16,7 @@ class WorldScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.centerOn(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
 
+    createParallaxBackground(this, { worldWidth: WORLD_WIDTH, worldHeight: WORLD_HEIGHT });
     this.drawBackground();
     this.drawConsumptionSpots();
 
