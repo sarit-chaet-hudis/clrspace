@@ -1,14 +1,30 @@
 import Phaser from 'phaser';
+import { getColorTemp } from '../colorTempState.js';
+import { playPop, playClear } from '../audio.js';
 
 // Consumption Mechanic prototype (ticket 04): bubble-burster.
 // A handful of bubbles drift inside the Consumption Spot's bounds; clicking
-// one pops it (scale/fade out), and a replacement spawns after a short delay.
-// No scoring — just a tactile, ongoing thing to poke at.
+// one pops it. Popping them all triggers a celebration and a longer pause
+// before a fresh batch respawns together — popping just one respawns it
+// quickly on its own, so the Spot never goes fully dead.
 
+// TUNABLES — fine-tune later, not decided now:
 const BUBBLE_COUNT = 6;
 const BUBBLE_RADIUS_RANGE = [10, 20];
-const DRIFT_SPEED = 0.3;
-const RESPAWN_DELAY_RANGE = [400, 1200];
+const DRIFT_SPEED = 0.9;
+const PARTIAL_RESPAWN_DELAY_RANGE = [400, 1200]; // one bubble popped, others remain
+const FULL_CLEAR_RESPAWN_DELAY = 7000; // all bubbles popped — the "win" pause
+// Not yet decided (fog, not this ticket): overall Spot/game size, bubble
+// count tuning, what "success" means beyond a full clear (a streak? a
+// score?), easter eggs.
+
+// Hue ranges (0-1 hue wheel) per color temperature — so bubble colors match
+// the toggle by palette, not just by riding the CSS filter passively.
+const HUE_RANGES = {
+  neutral: () => Math.random(),
+  warm: () => (Math.random() * 0.17 - 0.05 + 1) % 1, // reds through yellows
+  cool: () => 0.45 + Math.random() * 0.3, // blues through purples
+};
 
 function randRange([min, max]) {
   return min + Math.random() * (max - min);
@@ -28,7 +44,8 @@ export function createBubbleBurster(scene, spot, spotSize) {
     const radius = randRange(BUBBLE_RADIUS_RANGE);
     const x = randRange([bounds.minX + radius, bounds.maxX - radius]);
     const y = randRange([bounds.minY + radius, bounds.maxY - radius]);
-    const hsv = Phaser.Display.Color.HSVToRGB(Math.random(), 0.6, 1);
+    const hue = (HUE_RANGES[getColorTemp()] || HUE_RANGES.neutral)();
+    const hsv = Phaser.Display.Color.HSVToRGB(hue, 0.6, 1);
     const color = Phaser.Display.Color.GetColor(hsv.r, hsv.g, hsv.b);
 
     const circle = scene.add.circle(x, y, radius, color, 0.55);
@@ -41,10 +58,35 @@ export function createBubbleBurster(scene, spot, spotSize) {
     bubbles.push(circle);
   }
 
+  function spawnBatch() {
+    for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
+  }
+
+  function celebrateClear() {
+    playClear();
+    const burst = scene.add.text(spot.x, spot.y, 'nice!', {
+      fontFamily: 'monospace',
+      fontSize: '20px',
+      color: '#fff2b8',
+    }).setOrigin(0.5);
+    scene.tweens.add({
+      targets: burst,
+      y: burst.y - 30,
+      alpha: 0,
+      scale: 1.4,
+      duration: 900,
+      onComplete: () => burst.destroy(),
+    });
+  }
+
+  let awaitingBatchRespawn = false;
+
   function pop(circle) {
     const index = bubbles.indexOf(circle);
     if (index === -1) return;
     bubbles.splice(index, 1);
+    playPop();
+
     scene.tweens.add({
       targets: circle,
       scale: 1.6,
@@ -52,12 +94,26 @@ export function createBubbleBurster(scene, spot, spotSize) {
       duration: 180,
       onComplete: () => {
         circle.destroy();
-        scene.time.delayedCall(randRange(RESPAWN_DELAY_RANGE), spawnBubble);
+        // Checked here (not at pop-call-time) so a burst of near-simultaneous
+        // pops all see the final post-splice count; awaitingBatchRespawn
+        // ensures only the first one to notice a full clear acts on it.
+        if (bubbles.length === 0) {
+          if (!awaitingBatchRespawn) {
+            awaitingBatchRespawn = true;
+            celebrateClear();
+            scene.time.delayedCall(FULL_CLEAR_RESPAWN_DELAY, () => {
+              awaitingBatchRespawn = false;
+              spawnBatch();
+            });
+          }
+        } else {
+          scene.time.delayedCall(randRange(PARTIAL_RESPAWN_DELAY_RANGE), spawnBubble);
+        }
       },
     });
   }
 
-  for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
+  spawnBatch();
 
   function update() {
     for (const b of bubbles) {

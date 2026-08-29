@@ -1,44 +1,49 @@
 // Ambient Sound (mute/unmute, default muted) and the color-temperature Toggle.
 // Both are plain DOM controls (Notes in map.md: Space-wide controls, not Spots).
 
+import { getAudioContext, isMuted, setMuted } from './audio.js';
+import { setColorTemp } from './colorTempState.js';
+
 const COLOR_TEMPS = [
   { label: 'neutral', filter: 'none' },
   { label: 'warm', filter: 'sepia(0.35) saturate(1.4) hue-rotate(-8deg)' },
-  { label: 'cool', filter: 'hue-rotate(150deg) saturate(1.2) brightness(1.05)' },
+  // No hue-rotate here: the rest of the palette (grid, borders, stars) is
+  // already cool-leaning by default, and a big rotate would fight the
+  // explicit cool-hue selection bubble-burster (and future mechanics) use.
+  { label: 'cool', filter: 'saturate(1.3) brightness(1.08) contrast(1.05)' },
 ];
 
 export function setupColorTemperatureToggle({ container, button }) {
   let index = 0;
   button.textContent = `temp: ${COLOR_TEMPS[index].label}`;
+  setColorTemp(COLOR_TEMPS[index].label);
   button.addEventListener('click', () => {
     index = (index + 1) % COLOR_TEMPS.length;
     container.style.filter = COLOR_TEMPS[index].filter;
     button.textContent = `temp: ${COLOR_TEMPS[index].label}`;
+    setColorTemp(COLOR_TEMPS[index].label);
   });
 }
 
 export function setupAmbientSound({ button }) {
-  let audioContext = null;
   let gainNode = null;
-  let oscillator = null;
-  let lfo = null;
-  let muted = true;
+  let started = false;
   button.textContent = 'sound: off';
 
   function start() {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    gainNode = audioContext.createGain();
+    const ctx = getAudioContext();
+    gainNode = ctx.createGain();
     gainNode.gain.value = 0.05;
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(ctx.destination);
 
-    oscillator = audioContext.createOscillator();
+    const oscillator = ctx.createOscillator();
     oscillator.type = 'sine';
     oscillator.frequency.value = 110;
 
     // Slow LFO on frequency for a gentle, non-static drone.
-    lfo = audioContext.createOscillator();
+    const lfo = ctx.createOscillator();
     lfo.frequency.value = 0.08;
-    const lfoGain = audioContext.createGain();
+    const lfoGain = ctx.createGain();
     lfoGain.gain.value = 6;
     lfo.connect(lfoGain);
     lfoGain.connect(oscillator.frequency);
@@ -46,14 +51,14 @@ export function setupAmbientSound({ button }) {
     oscillator.connect(gainNode);
     oscillator.start();
     lfo.start();
+    started = true;
   }
 
   button.addEventListener('click', () => {
-    if (!audioContext) start();
-    if (audioContext.state === 'suspended') audioContext.resume();
-
-    muted = !muted;
-    gainNode.gain.setTargetAtTime(muted ? 0 : 0.05, audioContext.currentTime, 0.1);
-    button.textContent = muted ? 'sound: off' : 'sound: on';
+    if (!started) start();
+    const nextMuted = !isMuted();
+    setMuted(nextMuted);
+    gainNode.gain.setTargetAtTime(nextMuted ? 0 : 0.05, getAudioContext().currentTime, 0.1);
+    button.textContent = nextMuted ? 'sound: off' : 'sound: on';
   });
 }
