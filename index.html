@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>clrspace</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #0b0b12;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+    #clrspace-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      transition: filter 0.4s ease;
+    }
+    #clrspace-container canvas {
+      display: block;
+    }
+    .clrspace-ui {
+      position: fixed;
+      top: 12px;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.5);
+      color: #eee;
+      border: 1px solid #666;
+      padding: 6px 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #mute-toggle { left: 12px; }
+    #color-toggle { left: 140px; }
+    .scribble-input {
+      position: absolute;
+      resize: none;
+      z-index: 10;
+      box-sizing: border-box;
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body>
+  <div id="clrspace-container"></div>
+  <button id="mute-toggle" class="clrspace-ui">sound: off</button>
+  <button id="color-toggle" class="clrspace-ui">temp: neutral</button>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
