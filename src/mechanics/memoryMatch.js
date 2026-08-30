@@ -21,7 +21,11 @@ const FULL_CLEAR_RESHUFFLE_DELAY = 4000;
 const SWAP_TWEEN_DURATION = 450;
 // Not yet decided (fog, not this ticket): grid size beyond this 4x4 floor,
 // a timer/streak scoring, what "success" means beyond a full clear, easter
-// eggs, whether more than one swap should happen on larger boards.
+// eggs, whether more than one swap should happen on larger boards, and a
+// locked relationship between card count and color count — hue is
+// currently just randomized within a temp band regardless of pair count,
+// so at 8+ pairs some colors can end up too close to tell apart; needs an
+// explicit minimum-hue-separation rule tied to pairCount.
 
 const HUE_RANGES = {
   neutral: () => Math.random(),

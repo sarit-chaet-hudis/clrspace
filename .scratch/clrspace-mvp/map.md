@@ -31,12 +31,14 @@ A built, feelable MVP-sized first slice of clrspace — small enough to start bu
 - [What's the exact hand-placed layout of the Space for MVP?](.scratch/clrspace-mvp/issues/03-spot-layout.md): 5 Scribble Spots + 3 Consumption Spots, loose scatter, hard edges, Scribble Spot style randomized once per Spot from a curated set (exact fonts TBD), camera eases/tweens between Spots.
 - [Does a real DOM input coexist cleanly overlaid on a Phaser scene?](.scratch/clrspace-mvp/issues/09-spike-phaser-dom-text.md): Yes, verified live — coordinate tracking is clean; two fixable gotchas found (Phaser's default key capture eats keystrokes like Space unless disabled while a Scribble Spot is focused; clicking the canvas doesn't auto-blur a focused input, needs an explicit blur call). Neither reopens ADR-0001.
 - [What should Consumption Spot 1's Mechanic be?](.scratch/clrspace-mvp/issues/04-consumption-mechanic-1.md): **Bubble-burster** — bubbles drift and pop on click, hue matches the color-temperature toggle, popping one respawns it quickly but popping all triggers a celebration + 7s pause before a fresh batch. Drift speed settled at 0.5.
+- [What should Consumption Spot 2's Mechanic be?](.scratch/clrspace-mvp/issues/05-consumption-mechanic-2.md): **Memory-match** — 4x4/8-pair grid (bumped up after 3x2 played too easy), reveal-two-tiles turn-based matching, a mid-board tile swap once half the pairs clear. Color-distinctness-vs-card-count flagged as a follow-up, not blocking.
 
 ## Not yet specified
 
 - Anything downstream of the Phaser choice not yet pinned (build tooling/bundler, deployment target, file/module layout) — will follow naturally once `build-mvp-base` starts.
 - Exact font/size/frame assets for the Scribble Spot style palette — deferred to `build-mvp-base`, a hands-on asset choice rather than an abstract one.
 - Which Consumption Mechanics end up using physics/collision vs. simpler input handling — graduates per-Mechanic as tickets 04/05/06 resolve.
+- A locked relationship between card/bubble count and color count for Consumption Mechanics, so colors stay distinguishable as counts scale (surfaced by memory-match's 4x4 bump; may apply to bubble-burster too).
 
 ## Out of scope
 
