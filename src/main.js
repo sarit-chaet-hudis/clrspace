@@ -5,6 +5,7 @@ import { setupColorTemperatureToggle, setupAmbientSound } from './ui.js';
 import { createParallaxBackground } from './background.js';
 import { createBubbleBurster } from './mechanics/bubbleBurster.js';
 import { createMemoryMatch } from './mechanics/memoryMatch.js';
+import { createGravityToy } from './mechanics/gravityToy.js';
 
 const container = document.getElementById('clrspace-container');
 
@@ -58,9 +59,7 @@ class WorldScene extends Phaser.Scene {
       g.lineStyle(3, 0xb388ff, 1);
       g.strokeRoundedRect(spot.x - SPOT_SIZE / 2, spot.y - SPOT_SIZE / 2, SPOT_SIZE, SPOT_SIZE, 12);
 
-      // Ticket 04's bubble-burster and ticket 05's memory-match prototypes
-      // live in the first two Consumption Spots; 06 stays a placeholder
-      // until its own ticket resolves.
+      // Tickets 04/05/06's prototypes live in the three Consumption Spots.
       if (spot.id === 'consumption-1') {
         this.mechanics.push(createBubbleBurster(this, spot, SPOT_SIZE));
         continue;
@@ -69,19 +68,10 @@ class WorldScene extends Phaser.Scene {
         this.mechanics.push(createMemoryMatch(this, spot));
         continue;
       }
-
-      const text = this.add.text(spot.x, spot.y, spot.label, {
-        fontFamily: 'monospace',
-        fontSize: '12px',
-        color: '#e0d4ff',
-        align: 'center',
-        wordWrap: { width: SPOT_SIZE - 20 },
-      }).setOrigin(0.5);
-
-      const hitZone = this.add.zone(spot.x, spot.y, SPOT_SIZE, SPOT_SIZE).setInteractive();
-      hitZone.on('pointerdown', () => {
-        console.log(`Consumption Spot "${spot.id}" clicked — ${spot.label}`);
-      });
+      if (spot.id === 'consumption-3') {
+        this.mechanics.push(createGravityToy(this, spot, SPOT_SIZE));
+        continue;
+      }
     }
   }
 

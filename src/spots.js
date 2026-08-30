@@ -12,11 +12,10 @@ export const scribbleSpots = [
   { id: 'scribble-5', x: 350, y: 1300 },
 ];
 
-// Consumption Mechanics are placeholders until tickets 04/05/06 resolve.
 export const consumptionSpots = [
-  { id: 'consumption-1', x: 750, y: 800, label: 'mechanic TBD (ticket 04)' },
-  { id: 'consumption-2', x: 1400, y: 1000, label: 'mechanic TBD (ticket 05)' },
-  { id: 'consumption-3', x: 1900, y: 850, label: 'mechanic TBD (ticket 06)' },
+  { id: 'consumption-1', x: 750, y: 800 },
+  { id: 'consumption-2', x: 1400, y: 1000 },
+  { id: 'consumption-3', x: 1900, y: 850 },
 ];
 
 export const SPOT_SIZE = 160;

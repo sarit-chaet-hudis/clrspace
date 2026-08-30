@@ -93,6 +93,23 @@ export function playSwap() {
   osc.stop(now + 0.28);
 }
 
+// A very short, quiet "clink" — two balls colliding.
+export function playClink(intensity = 1) {
+  if (muted) return;
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(500 + Math.random() * 300, now);
+  gain.gain.setValueAtTime(Math.min(0.12, 0.04 * intensity), now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.07);
+}
+
 // A short rising two-note chime — positive reinforcement for clearing a Consumption Mechanic.
 export function playClear() {
   if (muted) return;
