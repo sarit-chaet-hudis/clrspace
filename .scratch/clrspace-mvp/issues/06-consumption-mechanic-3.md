@@ -1,5 +1,5 @@
 Type: prototype
-Status: claimed
+Status: resolved
 
 ## Question
 
@@ -11,4 +11,6 @@ Built gravity-toy in `consumption-3`'s Spot: click inside the Spot to drop a bal
 
 Tunable knobs deliberately left open for later (see `TUNABLES` comment block): resting friction/settling behavior (balls keep a little bounce forever rather than settling fully still), whether this needs any win condition at all or should stay a pure toy, the same card/ball-count-vs-color-count follow-up flagged on ticket 05, easter eggs.
 
-**Not yet resolved** — still a "how should it feel" question (prototype ticket, HITL). Try it and confirm whether gravity-toy is the one to keep here, or if it should change.
+## Answer
+
+**Gravity-toy**, locked in as `consumption-3`'s Mechanic — a pure physics toy with no win condition, deliberately distinct from bubble-burster (04) and memory-match (05).
