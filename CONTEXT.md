@@ -24,12 +24,16 @@ _Avoid_: game spot, puzzle room.
 The specific interactive rule-set inside a Consumption Spot (e.g. a bubble-burster, a pattern-matching puzzle). Each Consumption Spot has exactly one Mechanic; different Consumption Spots are expected to have different Mechanics from each other.
 
 **Toggle**:
-A control that changes some quality of the whole Space's presentation, not tied to any one Spot (e.g. the Color Temperature Toggle). Distinct from Ambient Sound's mute control, which only affects sound.
+A control that changes some quality of the whole Space's presentation, not tied to any one Spot (e.g. the Color Temperature Toggle). Distinct from the Ambient Sound and Sound Effects mute controls, which only affect sound.
 _Avoid_: setting, option, control (when referring to a Space-wide visual control specifically).
 
 **Ambient Sound**:
-The single looping background audio track for the Space, paired with a mute/unmute control that defaults to muted.
+The single looping background audio track for the Space, paired with a mute/unmute control that defaults to muted. Its control is independent of Sound Effects.
 _Avoid_: background music (used in index.md, but "music" implies composed melody — the MVP scope is any simple looping digital sound, not necessarily musical).
+
+**Sound Effects**:
+The one-off sounds Mechanics play in response to interaction (pops, clinks, match/mismatch). They have their own mute/unmute control, separate from Ambient Sound, which also defaults to muted.
+_Avoid_: SFX (fine as a UI label, but Sound Effects is canonical).
 
 **Session**:
 One continuous visit to the Space, from arrival to leaving. clrspace currently has no memory across Sessions — where you were, and what you left in a Scribble Spot, does not carry over to the next Session.

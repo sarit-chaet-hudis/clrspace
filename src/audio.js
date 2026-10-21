@@ -1,8 +1,9 @@
-// Shared AudioContext + mute state, so Ambient Sound and one-off SFX
-// (bubble pops, etc.) don't each manage their own context.
+// Shared AudioContext + Sound Effects mute state, so Ambient Sound and one-off
+// SFX (bubble pops, etc.) don't each manage their own context. Ambient Sound's
+// on/off lives on the melody itself (see ambientMelody.js).
 
 let audioContext = null;
-let muted = true;
+let sfxMuted = true;
 
 export function getAudioContext() {
   if (!audioContext) {
@@ -12,17 +13,17 @@ export function getAudioContext() {
   return audioContext;
 }
 
-export function isMuted() {
-  return muted;
+export function isSfxMuted() {
+  return sfxMuted;
 }
 
-export function setMuted(value) {
-  muted = value;
+export function setSfxMuted(value) {
+  sfxMuted = value;
 }
 
 // A short percussive "pop" — sine oscillator with a fast pitch drop and decay.
 export function playPop() {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -40,7 +41,7 @@ export function playPop() {
 
 // A single short blip — a gentle "match" acknowledgment, quieter than playClear.
 export function playMatch() {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -58,7 +59,7 @@ export function playMatch() {
 
 // A soft descending blip — a non-punishing "no match, try again" cue.
 export function playMismatch() {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -76,7 +77,7 @@ export function playMismatch() {
 
 // A short up-down frequency sweep — cue for two tiles visibly swapping places.
 export function playSwap() {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -95,7 +96,7 @@ export function playSwap() {
 
 // A very short, quiet "clink" — two balls colliding.
 export function playClink(intensity = 1) {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   const osc = ctx.createOscillator();
@@ -112,7 +113,7 @@ export function playClink(intensity = 1) {
 
 // A short rising two-note chime — positive reinforcement for clearing a Consumption Mechanic.
 export function playClear() {
-  if (muted) return;
+  if (sfxMuted) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
   [523, 784].forEach((freq, i) => {

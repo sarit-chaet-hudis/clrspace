@@ -28,7 +28,8 @@ npm run preview   # serve the production build locally
 - **Scribble Spots:** click one and type. The text is plain and selectable, so copying it out is the export.
 - **Consumption Spots:** click to play. There are three: bubble-burster, memory-match, and a gravity toy.
 - **Color temperature:** a toggle that shifts the whole space between color temperatures.
-- **Ambient sound:** a slow looping melody (after Pachelbel's Canon in D) that changes scale with the color temperature: cool is Dorian, neutral is major, warm is Lydian. It starts muted, so use the sound control to turn it on.
+- **Ambient sound:** a slow looping melody (after Pachelbel's Canon in D) that changes scale with the color temperature: cool is Dorian, neutral is major, warm is Lydian. It starts muted, so use the music control to turn it on.
+- **Sound effects:** pops, clinks and match sounds from the Consumption Spots have their own control, separate from the music. They also start muted.
 
 Nothing is saved between sessions yet.
 

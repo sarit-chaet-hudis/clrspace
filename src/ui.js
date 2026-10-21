@@ -1,7 +1,7 @@
-// Ambient Sound (mute/unmute, default muted) and the color-temperature Toggle.
-// Both are plain DOM controls (Notes in map.md: Space-wide controls, not Spots).
+// Ambient Sound and Sound Effects (separate mute/unmute, both default muted)
+// and the color-temperature Toggle. All are plain DOM controls (Notes in map.md: Space-wide controls, not Spots).
 
-import { isMuted, setMuted } from './audio.js';
+import { isSfxMuted, setSfxMuted } from './audio.js';
 import { createAmbientMelody } from './ambientMelody.js';
 import { setColorTemp } from './colorTempState.js';
 
@@ -28,12 +28,22 @@ export function setupColorTemperatureToggle({ container, button }) {
 
 export function setupAmbientSound({ button }) {
   const melody = createAmbientMelody();
-  button.textContent = 'sound: off';
+  let playing = false;
+  button.textContent = 'music: off';
 
   button.addEventListener('click', () => {
-    const nextMuted = !isMuted();
-    setMuted(nextMuted);
-    melody.setPlaying(!nextMuted);
-    button.textContent = nextMuted ? 'sound: off' : 'sound: on';
+    playing = !playing;
+    melody.setPlaying(playing);
+    button.textContent = playing ? 'music: on' : 'music: off';
+  });
+}
+
+export function setupSoundEffects({ button }) {
+  button.textContent = 'sfx: off';
+
+  button.addEventListener('click', () => {
+    const nextMuted = !isSfxMuted();
+    setSfxMuted(nextMuted);
+    button.textContent = nextMuted ? 'sfx: off' : 'sfx: on';
   });
 }

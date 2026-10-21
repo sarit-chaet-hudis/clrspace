@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { WORLD_WIDTH, WORLD_HEIGHT, scribbleSpots, consumptionSpots, SPOT_SIZE } from './spots.js';
 import { createScribbleOverlay } from './scribbleOverlay.js';
-import { setupColorTemperatureToggle, setupAmbientSound } from './ui.js';
+import { setupColorTemperatureToggle, setupAmbientSound, setupSoundEffects } from './ui.js';
 import { createParallaxBackground } from './background.js';
 import { createBubbleBurster } from './mechanics/bubbleBurster.js';
 import { createMemoryMatch } from './mechanics/memoryMatch.js';
@@ -117,4 +117,5 @@ window.addEventListener('resize', () => {
 });
 
 setupColorTemperatureToggle({ container, button: document.getElementById('color-toggle') });
-setupAmbientSound({ button: document.getElementById('mute-toggle') });
+setupAmbientSound({ button: document.getElementById('music-toggle') });
+setupSoundEffects({ button: document.getElementById('sfx-toggle') });
